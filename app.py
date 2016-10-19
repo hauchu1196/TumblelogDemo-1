@@ -1,13 +1,17 @@
 from mongoengine import *
 from mlab import *
 import json
-from flask import Flask,request
+from flask import *
 
 app = Flask(__name__)
 
 class Post(Document):
     title = StringField()
     content = StringField()
+
+    def get_json(self):
+        return {"title": self.title, 'content': self.content}
+
 
 post1 = {
     "title" : "Good day",
@@ -27,21 +31,22 @@ posts = [post1,post2]
 
 @app.route('/')
 def main():
-    return json.dumps(posts)
+    posts = Post.objects
+    return json.dumps([post.get_json() for post in posts])
 
 @app.route('/addpost',methods=["POST"])
-def addost():
+def addpost():
     args = request.form
     title_value = args["title"]
     content_value = args["content"]
-    new_post = {"title":title_value,
-                "content":content_value
-                }
-    posts.append(new_post)
-    print(title_value,content_value)
-    return  "OK"
+
+    p = Post(title = title_value, content = content_value)
+    p.save()
+
+
+    return  jsonify({"code" : 1, "message" : "OK"})
 
 
 if __name__ == '__main__':
-    mlap_connect
+    mlab_connect()
     app.run()
