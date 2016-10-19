@@ -1,7 +1,13 @@
+from mongoengine import *
+from mlab import *
 import json
 from flask import Flask,request
 
 app = Flask(__name__)
+
+class Post(Document):
+    title = StringField()
+    content = StringField()
 
 post1 = {
     "title" : "Good day",
@@ -37,4 +43,5 @@ def addost():
 
 
 if __name__ == '__main__':
+    mlap_connect
     app.run()
