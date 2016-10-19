@@ -1,5 +1,5 @@
 import json
-from flask import Flask
+from flask import Flask,request
 
 app = Flask(__name__)
 
@@ -22,6 +22,18 @@ posts = [post1,post2]
 @app.route('/')
 def main():
     return json.dumps(posts)
+
+@app.route('/addpost',methods=["POST"])
+def addost():
+    args = request.form
+    title_value = args["title"]
+    content_value = args["content"]
+    new_post = {"title":title_value,
+                "content":content_value
+                }
+    posts.append(new_post)
+    print(title_value,content_value)
+    return  "OK"
 
 
 if __name__ == '__main__':
